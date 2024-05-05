@@ -5,6 +5,9 @@
  * @format
  */
 
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
@@ -24,75 +27,129 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {
+  NavigationContainer,
+} from "@react-navigation/native";
+import Home from './src/screens/home';
+import Tickets from './src/screens/Tickets';
+import Events from './src/screens/events';
+import Profile from './src/screens/profile';
+import OnboardingScreen from './src/screens/onBoardingScreen';
+import LoginScreen from './src/screens/auth/LoginScreen';
+import RegistrationScreen from './src/screens/auth/RegistrationScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+function AppStack() {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+      <Tab.Navigator
+          screenOptions={{
+              tabBarActiveTintColor: Colors.primary,
+              tabBarStyle: {
+                  position: 'absolute',
+                  // bottom: 10,
+                  height: 72,
+                  paddingBottom: 20,
+                  width: '100%',
+                  // marginLeft: 20,
+                  shadowColor: "white",
+                  backgroundColor: 'white',
+              },
+              headerShown: false,
+          }}
+          sceneContainerStyle={{
+              marginBottom: 62,
+          }}>
+          <Tab.Screen
+              name="Home"
+              component={Home}
+              options={{
+                  tabBarIcon: ({color, size}) => (
+                      <MaterialCommunityIcons name="home" color={color} size={25} />
+                  ),
+                  tabBarLabelStyle: {
+                      fontSize: 10,
+                      fontFamily: 'Poppins-bold',
+                  },
+              }}
+          />
+          <Tab.Screen
+              name="Events"
+              component={Events}
+              options={{
+                  tabBarIcon: ({color, size}) => (
+                      <MaterialCommunityIcons
+                          name="hospital-box-outline"
+                          color={color}
+                          size={25}
+                      />
+                  ),
+                  tabBarLabelStyle: {
+                      fontSize: 10,
+                      fontFamily: 'Poppins-bold',
+                  },
+                  tabBarLabel: 'Events',
+              }}
+          />
+          <Tab.Screen
+              name="Tickets"
+              component={Tickets}
+              options={{
+                  tabBarIcon: ({color, size}) => (
+                      <MaterialCommunityIcons
+                          name="map-marker"
+                          color={color}
+                          size={25}
+                      />
+                  ),
+                  tabBarLabelStyle: {
+                      fontSize: 10,
+                      fontFamily: 'Poppins-bold',
+                  },
+                  tabBarLabel: 'Location',
+              }}
+          />
+          <Tab.Screen
+              name="Profile"
+              component={Profile}
+              options={{
+                  tabBarIcon: ({color, size}) => (
+                      <MaterialCommunityIcons
+                          name="rocket-outline"
+                          color={color}
+                          size={25}
+                      />
+                  ),
+                  tabBarLabelStyle: {
+                      fontSize: 10,
+                      fontFamily: 'Poppins-bold',
+                  },
+                  tabBarLabel: 'Profile',
+              }}
+          />
+
+      </Tab.Navigator>
+
   );
 }
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+   <NavigationContainer>
+    <Stack.Navigator
+          screenOptions={{
+              headerShown:false,
+          }}
+      >
+          <Stack.Screen name="onbording" component={OnboardingScreen} />
+          <Stack.Screen name="login" component={LoginScreen} />
+          <Stack.Screen name="register" component={RegistrationScreen} />
+          <Stack.Screen name="home" component={AppStack} />
+      </Stack.Navigator>
+   </NavigationContainer>
   );
 }
 
